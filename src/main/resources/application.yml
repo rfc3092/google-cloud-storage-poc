@@ -1,0 +1,4 @@
+google:
+  cloud:
+    storage:
+      bucket: nav-pam-logo
