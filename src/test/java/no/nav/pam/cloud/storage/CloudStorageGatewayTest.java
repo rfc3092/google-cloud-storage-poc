@@ -1,6 +1,5 @@
 package no.nav.pam.cloud.storage;
 
-import com.google.common.net.MediaType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,7 @@ public class CloudStorageGatewayTest {
 
         assertNull(gateway.getMediaLink(null));
         assertNull(gateway.getMediaLink(""));
-        assertNull(gateway.getMediaLink("This is a name we're sure doesn't exist in out bucket"));
-
-    }
-
-    @Test
-    public void getExistingMediaLink() {
-
-        assertEquals("https://www.googleapis.com/download/storage/v1/b/nav-pam-logo/o/nav-logo.png?generation=1508495097202081&alt=media", gateway.getMediaLink("nav-logo.png"));
+        assertNull(gateway.getMediaLink("This is a name we're sure doesn't exist in our bucket"));
 
     }
 
@@ -44,7 +36,7 @@ public class CloudStorageGatewayTest {
 
         assertFalse(gateway.delete(null));
         assertFalse(gateway.delete(""));
-        assertFalse(gateway.delete("This is a name we're sure doesn't exist in out bucket"));
+        assertFalse(gateway.delete("This is a name we're sure doesn't exist in our bucket"));
 
     }
 

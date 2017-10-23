@@ -1,4 +1,11 @@
 google:
   cloud:
+    project: "project-id field from your JSON"
+    privateKey:
+      id: "private_key_id from your JSON"
+      content: "private_key from your JSON"
+    client:
+      id: "client_id from your JSON"
+      email: "client_email from your JSON"
     storage:
-      bucket: nav-pam-logo
+      bucket: "your-properly-configured-bucket-here"

@@ -1,7 +1,9 @@
 package no.nav.pam.cloud.storage;
 
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.*;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -10,11 +12,21 @@ public class CloudStorageGateway {
     private final String bucket;
     private final Storage storage;
 
-    public CloudStorageGateway(String bucket) {
+    public CloudStorageGateway(String clientId, String clientEmail, String privateKeyPkcs8, String privateKeyId, String project, String bucket)
+            throws CloudStorageException {
 
+        try {
+            ServiceAccountCredentials credentials = ServiceAccountCredentials.fromPkcs8(clientId, clientEmail, privateKeyPkcs8, privateKeyId, null);
+            storage = StorageOptions
+                    .newBuilder()
+                    .setProjectId(project)
+                    .setCredentials(credentials)
+                    .build()
+                    .getService();
+        } catch (IOException e) {
+            throw new CloudStorageException(e);
+        }
         this.bucket = bucket;
-        // TODO: Get config (auth) from YML, not environment.
-        storage = StorageOptions.getDefaultInstance().getService();
 
     }
 

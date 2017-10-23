@@ -7,12 +7,28 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CloudStorageConfig {
 
+    @Value("${google.cloud.project}")
+    private String project;
+
+    @Value("${google.cloud.privateKey.id}")
+    private String privateKeyId;
+
+    @Value("${google.cloud.privateKey.content}")
+    private String privateKey;
+
+    @Value("${google.cloud.client.id}")
+    private String clientId;
+
+    @Value("${google.cloud.client.email}")
+    private String clientEmail;
+
     @Value("${google.cloud.storage.bucket}")
     private String bucket;
 
     @Bean
-    public CloudStorageGateway cloudStorageGateway() {
-        return new CloudStorageGateway(bucket);
+    public CloudStorageGateway cloudStorageGateway()
+            throws CloudStorageException {
+        return new CloudStorageGateway(clientId, clientEmail, privateKey, privateKeyId, project, bucket);
     }
 
 }
