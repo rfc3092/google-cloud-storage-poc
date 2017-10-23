@@ -1,5 +1,6 @@
 package no.nav.pam.cloud.storage;
 
+import com.google.common.net.MediaType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,9 +63,9 @@ public class CloudStorageGatewayTest {
         File file = new File(url.getFile());
         assertTrue(file.exists());
         InputStream content = new FileInputStream(file);
-        String name = UUID.randomUUID().toString();
+        String name = UUID.randomUUID().toString() + ".png";
 
-        assertEquals(name, gateway.store(name, content));
+        assertEquals(name, gateway.store(name, content, "image/png"));
 
         String mediaLink = gateway.getMediaLink(name);
         assertTrue(mediaLink.contains(name));

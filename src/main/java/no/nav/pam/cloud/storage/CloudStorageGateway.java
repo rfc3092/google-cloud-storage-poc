@@ -1,11 +1,8 @@
 package no.nav.pam.cloud.storage;
 
-import com.google.api.gax.paging.Page;
 import com.google.cloud.storage.*;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class CloudStorageGateway {
@@ -21,13 +18,13 @@ public class CloudStorageGateway {
 
     }
 
-    public String store(String name, InputStream content)
+    public String store(String name, InputStream content, String contentType)
             throws CloudStorageException {
 
         try {
             return storage
                     .get(bucket)
-                    .create(name, content, Bucket.BlobWriteOption.doesNotExist())
+                    .create(name, content, contentType, Bucket.BlobWriteOption.doesNotExist())
                     .getName();
         } catch (StorageException e) {
             throw new CloudStorageException(e);
