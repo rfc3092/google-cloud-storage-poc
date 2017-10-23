@@ -1,11 +1,9 @@
 package no.nav.pam.cloud.storage;
 
 import com.google.api.gax.paging.Page;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.storage.*;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,20 +21,36 @@ public class CloudStorageGateway {
 
     }
 
-    public BlobId store(Blob blob)
+    public String store(String name, InputStream content)
             throws CloudStorageException {
-        // TODO: Implement and hide BlobId/Blob.
-        return null;
+
+        try {
+            return storage
+                    .get(bucket)
+                    .create(name, content, Bucket.BlobWriteOption.doesNotExist())
+                    .getName();
+        } catch (StorageException e) {
+            throw new CloudStorageException(e);
+        }
+
     }
 
-    List<String> list() {
+    public boolean delete(String name) {
 
-        Page<Blob> blobs = storage.list(bucket);
-        List<String> urls = new ArrayList<>();
-        blobs.iterateAll().forEach(blob -> {
-            urls.add(blob.getMediaLink());
-        });
-        return urls;
+        if (name == null) {
+            return false;
+        }
+        return storage.delete(BlobId.of(bucket, name));
+
+    }
+
+    public String getMediaLink(String name) {
+
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+        Blob blob = storage.get(BlobId.of(bucket, name));
+        return blob == null ? null : blob.getMediaLink();
 
     }
 
