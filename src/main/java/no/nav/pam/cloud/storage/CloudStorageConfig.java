@@ -1,5 +1,6 @@
 package no.nav.pam.cloud.storage;
 
+import no.nav.pam.image.ImageDownscaler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,9 +27,9 @@ public class CloudStorageConfig {
     private String bucket;
 
     @Bean
-    public CloudStorageGateway cloudStorageGateway()
+    public CloudStorageGateway cloudStorageGateway(ImageDownscaler downscaler)
             throws CloudStorageException {
-        return new CloudStorageGateway(clientId, clientEmail, privateKey, privateKeyId, project, bucket);
+        return new CloudStorageGateway(clientId, clientEmail, privateKey, privateKeyId, project, bucket, downscaler);
     }
 
 }

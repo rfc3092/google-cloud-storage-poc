@@ -2,17 +2,24 @@ package no.nav.pam.cloud.storage;
 
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.*;
+import no.nav.pam.image.ImageDownscaler;
 
 import java.io.IOException;
-import java.io.InputStream;
-
 
 public class CloudStorageGateway {
 
     private final String bucket;
     private final Storage storage;
+    private final ImageDownscaler downscaler;
 
-    public CloudStorageGateway(String clientId, String clientEmail, String privateKeyPkcs8, String privateKeyId, String project, String bucket)
+    public CloudStorageGateway(
+            String clientId,
+            String clientEmail,
+            String privateKeyPkcs8,
+            String privateKeyId,
+            String project,
+            String bucket,
+            ImageDownscaler downscaler)
             throws CloudStorageException {
 
         try {
@@ -27,18 +34,22 @@ public class CloudStorageGateway {
             throw new CloudStorageException(e);
         }
         this.bucket = bucket;
+        this.downscaler = downscaler;
 
     }
 
-    public String store(String name, InputStream content, String contentType)
+    public String store(String name, byte[] content)
             throws CloudStorageException {
 
         try {
+            BlobInfo info = BlobInfo
+                    .newBuilder(bucket, name)
+                    .setCacheControl("max-age=1337")
+                    .build();
             return storage
-                    .get(bucket)
-                    .create(name, content, contentType, Bucket.BlobWriteOption.doesNotExist())
+                    .create(info, downscaler.downscale(name, content), Storage.BlobTargetOption.doesNotExist())
                     .getName();
-        } catch (StorageException e) {
+        } catch (Exception e) {
             throw new CloudStorageException(e);
         }
 
@@ -46,10 +57,7 @@ public class CloudStorageGateway {
 
     public boolean delete(String name) {
 
-        if (name == null) {
-            return false;
-        }
-        return storage.delete(BlobId.of(bucket, name));
+        return name != null && storage.delete(BlobId.of(bucket, name));
 
     }
 

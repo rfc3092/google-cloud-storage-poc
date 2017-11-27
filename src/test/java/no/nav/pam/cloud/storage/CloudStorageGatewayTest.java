@@ -8,6 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.UUID;
@@ -44,25 +45,37 @@ public class CloudStorageGatewayTest {
      * Note - if this test fails, you need to do some manual cleanup in order to remove any created object (with a
      * generated UUID as its name).
      *
-     * @throws Exception Hopefully not.
+     * @throws CloudStorageException Hopefully not.
      */
     @Test
     public void storeObjectGetItsMediaLinkAndThenDeleteIt()
-            throws Exception {
+            throws IOException, CloudStorageException {
 
-        URL url = this.getClass().getResource("/nav-logo.png");
-        assertNotNull(url);
-        File file = new File(url.getFile());
-        assertTrue(file.exists());
-        InputStream content = new FileInputStream(file);
+        byte[] content = loadImageFromResource("/nav-logo.png");
         String name = UUID.randomUUID().toString() + ".png";
 
-        assertEquals(name, gateway.store(name, content, "image/png"));
+        assertEquals(name, gateway.store(name, content));
 
         String mediaLink = gateway.getMediaLink(name);
         assertTrue(mediaLink.contains(name));
 
         assertTrue(gateway.delete(name));
+
+    }
+
+    private byte[] loadImageFromResource(String name)
+            throws IOException {
+
+        URL url = this.getClass().getResource(name);
+        assertNotNull(url);
+        File file = new File(url.getFile());
+        assertTrue(file.exists());
+        int length = (int) file.length();
+        byte[] content = new byte[length];
+        try (InputStream input = new FileInputStream(file)) {
+            assertEquals(length, input.read(content));
+        }
+        return content;
 
     }
 

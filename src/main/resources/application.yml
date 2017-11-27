@@ -1,3 +1,4 @@
+# Properties related to Google Cloud Storage.
 google:
   cloud:
     project: "project-id field from your JSON"
@@ -9,3 +10,10 @@ google:
       email: "client_email from your JSON"
     storage:
       bucket: "your-properly-configured-bucket-here"
+
+# Properties related to image downscaling.
+image:
+  size:
+    max:
+      x: 10
+      y: 10
