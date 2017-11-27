@@ -20,7 +20,24 @@ public class ImageDownscaler {
 
     public BufferedImage downscale(BufferedImage original) {
 
-        return downscaleY((downscaleX(original)));
+        boolean downscale = false;
+        int newSizeX = original.getWidth();
+        int newSizeY = original.getHeight();
+
+        if (newSizeX > maxSizeX) {
+            downscale = true;
+            float factor = (float) maxSizeX / newSizeX;
+            newSizeX = maxSizeX;
+            newSizeY = Math.max(1, (int) (factor * newSizeY));
+        }
+        if (newSizeY > maxSizeY) {
+            downscale = true;
+            float factor = (float) maxSizeY / newSizeY;
+            newSizeX = Math.max(1, (int) (factor * newSizeX));
+            newSizeY = maxSizeY;
+        }
+
+        return downscale ? redraw(original, newSizeX, newSizeY) : original;
 
     }
 
@@ -50,40 +67,16 @@ public class ImageDownscaler {
 
     }
 
-    private BufferedImage downscaleX(BufferedImage original) {
-
-        if (original.getWidth() <= maxSizeX) {
-            return original;
-        }
-
-        float factor = (float) maxSizeX / (float) original.getWidth();
-        int newSizeY = Math.max(1, (int) (factor * original.getHeight()));
-        return redraw(original, maxSizeX, newSizeY);
-
-    }
-
-    private BufferedImage downscaleY(BufferedImage original) {
-
-        if (original.getHeight() <= maxSizeY) {
-            return original;
-        }
-
-        float factor = (float) maxSizeY / (float) original.getHeight();
-        int newSizeX = Math.max(1, (int) (factor * original.getWidth()));
-        return redraw(original, newSizeX, maxSizeY);
-
-    }
-
     private static BufferedImage redraw(BufferedImage original, int newSizeX, int newSizeY) {
 
-        BufferedImage reduced = new BufferedImage(newSizeX, newSizeY, original.getType());
+        BufferedImage downscaled = new BufferedImage(newSizeX, newSizeY, original.getType());
 
         double scaleX = (double) newSizeX / original.getWidth();
         double scaleY = (double) newSizeY / original.getHeight();
         AffineTransform transformation = new AffineTransform();
         transformation.scale(scaleX, scaleY);
 
-        return new AffineTransformOp(transformation, AffineTransformOp.TYPE_BILINEAR).filter(original, reduced);
+        return new AffineTransformOp(transformation, AffineTransformOp.TYPE_BILINEAR).filter(original, downscaled);
 
     }
 
