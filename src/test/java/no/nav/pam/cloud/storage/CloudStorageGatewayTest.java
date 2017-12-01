@@ -1,5 +1,6 @@
 package no.nav.pam.cloud.storage;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,13 @@ import java.util.UUID;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.*;
 
+/**
+ * Run this test manually, as you need an actual configuration file (externally, or by adding a
+ * {@code src/test/resources/application.yaml} file or what have you).
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class CloudStorageGatewayTest {
 
     @Autowired
