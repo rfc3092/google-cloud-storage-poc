@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 @RunWith(Parameterized.class)
 public class ImageDownscalerTest {
 
-    private static Logger LOG = LoggerFactory.getLogger(ImageDownscalerTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImageDownscalerTest.class);
 
     private final int maxSizeX;
     private final int maxSizeY;

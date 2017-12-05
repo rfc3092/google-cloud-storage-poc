@@ -41,6 +41,7 @@ public class ImageDownscaler {
 
     }
 
+    // NOTE: Included for reference.
     public byte[] downscale(String filename, byte[] content)
             throws ImageDownscalerException {
 

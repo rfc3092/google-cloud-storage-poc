@@ -1,6 +1,6 @@
 package no.nav.pam.image;
 
-public class ImageDownscalerException extends Exception {
+class ImageDownscalerException extends Exception {
 
     ImageDownscalerException(Throwable cause) {
         super(cause);

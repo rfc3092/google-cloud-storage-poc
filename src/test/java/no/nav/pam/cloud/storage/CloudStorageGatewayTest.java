@@ -26,6 +26,9 @@ import static org.junit.Assert.*;
 @Ignore
 public class CloudStorageGatewayTest {
 
+    private static final String RESOURCE_TYPE = "png";
+    private static final String RESOURCE_NAME = "/nav-logo." + RESOURCE_TYPE;
+
     @Autowired
     private CloudStorageGateway gateway;
 
@@ -57,8 +60,8 @@ public class CloudStorageGatewayTest {
     public void storeObjectGetItsMediaLinkAndThenDeleteIt()
             throws IOException, CloudStorageException {
 
-        byte[] content = loadImageFromResource("/nav-logo.png");
-        String name = UUID.randomUUID().toString() + ".png";
+        byte[] content = loadImageFromResource();
+        String name = UUID.randomUUID().toString() + "." + RESOURCE_TYPE;
 
         assertEquals(name, gateway.store(name, content));
 
@@ -69,10 +72,10 @@ public class CloudStorageGatewayTest {
 
     }
 
-    private byte[] loadImageFromResource(String name)
+    private byte[] loadImageFromResource()
             throws IOException {
 
-        URL url = this.getClass().getResource(name);
+        URL url = this.getClass().getResource(RESOURCE_NAME);
         assertNotNull(url);
         File file = new File(url.getFile());
         assertTrue(file.exists());

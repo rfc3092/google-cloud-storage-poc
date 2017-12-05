@@ -34,6 +34,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
             <exclusions>
+                <!-- Causing conflict. -->
                 <exclusion>
                     <groupId>com.vaadin.external.google</groupId>
                     <artifactId>android-json</artifactId>
