@@ -6,4 +6,8 @@ class CloudStorageException extends Exception {
         super(cause);
     }
 
+    CloudStorageException(String message) {
+        super(message);
+    }
+
 }

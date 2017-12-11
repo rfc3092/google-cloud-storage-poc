@@ -5,6 +5,8 @@ import com.google.cloud.storage.*;
 import no.nav.pam.image.ImageDownscaler;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CloudStorageGateway {
 
@@ -68,6 +70,55 @@ public class CloudStorageGateway {
         }
         Blob blob = storage.get(BlobId.of(bucket, name));
         return blob == null ? null : blob.getMediaLink();
+
+    }
+
+    public Set<String> getAllMediaLinks()
+            throws CloudStorageException {
+
+        try {
+
+            Set<String> mediaLinks = new HashSet<>();
+            getBucket()
+                    .list()
+                    .iterateAll()
+                    .forEach(blob -> mediaLinks.add(blob.getMediaLink()));
+            return mediaLinks;
+
+        } catch (StorageException e) {
+            throw new CloudStorageException(e);
+        }
+
+    }
+
+    public void deleteAllMediaLinks(Set<String> mediaLinks)
+            throws CloudStorageException {
+
+        try {
+
+            getBucket()
+                    .list()
+                    .iterateAll()
+                    .forEach(blob -> {
+                        if (mediaLinks.contains(blob.getMediaLink())) {
+                            blob.delete();
+                        }
+                    });
+
+        } catch (StorageException e) {
+            throw new CloudStorageException(e);
+        }
+
+    }
+
+    private Bucket getBucket()
+            throws CloudStorageException {
+
+        Bucket b = storage.get(bucket);
+        if (b == null) {
+            throw new CloudStorageException("Cannot find configured bucket " + bucket);
+        }
+        return b;
 
     }
 
